@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToDoMVVM.Views.ToDoPage"
+             xmlns:vm="clr-namespace:ToDoMVVM.ViewModels;assembly=ToDoMVVM"
+             Title="ToDoPage">
+    <ContentPage.BindingContext>
+        <vm:ToDoViewModel />
+    </ContentPage.BindingContext>
+
+    <!-- Usando Grid en lugar de StackLayout -->
+    <Grid Padding="10" RowDefinitions="*,Auto">
+        <!-- CollectionView en la primera fila que ocupa todo el espacio disponible excepto el necesario para el Entry y el Button -->
+        <CollectionView Grid.Row="0" ItemsSource="{Binding Items}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItem Text="Delete"
+                                       BackgroundColor="Red"
+                                       Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToDoViewModel}}, Path=DeleteItemCommand}"
+                                       CommandParameter="{Binding .}" />
+                        </SwipeView.RightItems>
+                        <Grid Padding="10" ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="{Binding Title}" 
+                                   VerticalOptions="Center" />
+                            <CheckBox Grid.Column="1"
+                                      IsChecked="{Binding IsCompleted, Mode=TwoWay}" />
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Grid Grid.Row="1" ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="130"/>
+            </Grid.ColumnDefinitions>
+            <Entry Placeholder="Add new item"
+                Grid.Column="0"
+                Text="{Binding NewItemTitle, Mode=TwoWay}" />
+            <Button Text="Add"
+                Grid.Column="1"
+                Command="{Binding AddItemCommand}" />
+        </Grid>
+    </Grid>
+</ContentPage>
